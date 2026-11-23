@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基礎功能和聲學入門 — 教學簡報</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --card-light: #334155;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --tonic: #10b981;
+    --subdom: #f59e0b;
+    --dom: #ef4444;
+    --purple: #a855f7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 28px;
+    background: rgba(15, 23, 42, 0.9);
+    border-bottom: 1px solid #334155;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .badge {
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--accent);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+  main {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 48px;
+  }
+  .slide {
+    display: none;
+    width: 100%;
+    max-width: 1060px;
+    animation: fadeIn 0.35s ease;
+  }
+  .slide.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  h1 { font-size: 2.6rem; line-height: 1.25; margin-bottom: 16px; }
+  h2 { font-size: 1.9rem; margin-bottom: 8px; color: var(--accent); }
+  .subtitle { font-size: 1.15rem; color: var(--muted); margin-bottom: 24px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 16px; }
+  .box {
+    background: var(--card);
+    border: 1px solid #334155;
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .box h3 { font-size: 1.15rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .box p, .box li { font-size: 0.98rem; line-height: 1.65; color: #e2e8f0; }
+  .box ul { padding-left: 20px; }
+  .example-tag {
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: rgba(56, 189, 248, 0.08);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .wiki-ref {
+    margin-top: 20px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: right;
+  }
+  .btn-play {
+    margin-top: 12px;
+    background: var(--accent);
+    color: #0f172a;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.88rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.1s, opacity 0.2s;
+  }
+  .btn-play:hover { opacity: 0.9; transform: scale(1.02); }
+  .btn-play:active { transform: scale(0.98); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    background: var(--card);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  th, td {
+    padding: 11px 14px;
+    text-align: center;
+    border-bottom: 1px solid #334155;
+    font-size: 0.95rem;
+  }
+  th { background: #0f172a; color: var(--accent); }
+  .pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+  .t-color { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+  .s-color { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+  .d-color { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+  footer {
+    padding: 14px 28px;
+    background: rgba(15, 23, 42, 0.95);
+    border-top: 1px solid #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-btns button {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid #475569;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    margin-left: 8px;
+  }
+  .nav-btns button:hover { background: var(--card-light); }
+  .progress-bar {
+    height: 4px;
+    background: var(--accent);
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: width 0.3s ease;
+  }
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .flow-node {
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-align: center;
+    min-width: 150px;
+  }
+  .arrow { font-size: 1.5rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<header>
+  <div>🎼 <strong>基礎功能和聲學入門</strong>（LLM Wiki 知識庫教學簡報）</div>
+  <div><span class="badge">統一示範調性：C 大調</span> &nbsp; <span id="slideCounter">1 / 9</span></div>
+</header>
+
+<main>
+  <!-- Slide 1: 封面 -->
+  <section class="slide active">
+    <span class="badge" style="margin-bottom: 14px; display: inline-block;">零基礎音樂理論指南</span>
+    <h1>為什麼和弦這樣接會好聽？<br><span style="color: var(--accent);">基礎功能和聲學入門</span></h1>
+    <p class="subtitle">從音程積木、三和弦色彩，到流行金曲背後的「T → S → D → T」敘事密碼</p>
+    <div class="grid-3" style="margin-top: 28px;">
+      <div class="box">
+        <h3>🧱 1. 零件層</h3>
+        <p>認識全音與半音、大調音階，以及如何用「三度堆疊」蓋出四種基礎三和弦。</p>
+      </div>
+      <div class="box">
+        <h3>👨‍👩‍👧‍👦 2. 家族層</h3>
+        <p>限制只用 C 大調白鍵，推導出七個和諧相處的「順階和弦家族」。</p>
+      </div>
+      <div class="box">
+        <h3>🎬 3. 劇情層</h3>
+        <p>揭開和弦「回家、出發、緊張」的功能動力，聽懂音樂裡的標點符號。</p>
+      </div>
+    </div>
+    <div class="example-tag" style="margin-top: 24px;">
+      🔊 <strong>互動提示：</strong>本簡報內建 Web Audio 鋼琴合成器，點擊各頁的「試聽」按鈕即可直接聽見和聲差異！
+    </div>
+    <div class="wiki-ref">知識來源：LLM Wiki《基礎功能和聲學入門》（01 ~ 05）</div>
+  </section>
+
+  <!-- Slide 2: 音程與大調音階 -->
+  <section class="slide">
+    <h2>1. 音程與大調音階：和聲的最小積木</h2>
+    <p class="subtitle">距離決定聽感——全音、半音與三度音程的秘密</p>
+    <div class="grid-2">
+      <div class="box">
+        <h3>🎹 大調音階公式（C 大調）</h3>
+        <ul>
+          <li><strong>半音：</strong>相鄰兩鍵距離（如 E-F、B-C）。</li>
+          <li><strong>全音：</strong>兩個半音相加（如 C-D）。</li>
+          <li><strong>大調規律：</strong><code>全 - 全 - 半 - 全 - 全 - 全 - 半</code></li>
+          <li>套用在 C 音上即得 <code>C D E F G A B</code>（全白鍵）。</li>
+        </ul>
+        <div class="example-tag">
+          🎵 <strong>實例錨點：</strong>電影《真善美》經典插曲<strong>〈Do-Re-Mi〉</strong>開頭旋律，就是最標準的大調音階上行。
+        </div>
+      </div>
+      <div class="box">
+        <h3>📏 最關鍵的「三度音程」</h3>
+        <ul>
+          <li><strong>大三度（4 個半音，C → E）：</strong>聽感明亮、開闊、正面。</li>
+          <li><strong>小三度（3 個半音，E → G）：</strong>聽感柔和、內斂、略帶憂傷。</li>
+        </ul>
+        <div class="example-tag">
+          🎵 <strong>生活聽覺實例：</strong><br>
+          • <strong>大三度：</strong>經典軍號聲、〈Oh When The Saints〉開頭。<br>
+          • <strong>小三度：</strong>救護車「咿－喔」警笛聲、〈小星星〉「一閃一閃」下行。
+        </div>
+        <button class="btn-play" onclick="playInterval([261.63, 329.63])">🔊 試聽大三度 (C-E)</button>
+        <button class="btn-play" style="background:#94a3b8" onclick="playInterval([329.63, 392.00])">🔊 試聽小三度 (E-G)</button>
+      </div>
+    </div>
+    <div class="wiki-ref">來源節點：[[01_音程與音階基礎.md]]</div>
+  </section>
+
+  <!-- Slide 3: 三和弦的構造與色彩 -->
+  <section class="slide">
+    <h2>2. 三和弦的構造與色彩</h2>
+    <p class="subtitle">將「大三度」與「小三度」上下堆疊，創造四種截然不同的情緒</p>
+    <div class="grid-4">
+      <div class="box">
+        <h3 style="color:#34d399">大三和弦 Major</h3>
+        <p><strong>結構：</strong>大三度 + 小三度</p>
+        <p><strong>C 和弦：</strong><code>C - E - G</code></p>
+        <p style="margin-top:8px;">陽光、穩定、正面。如<strong>〈小星星〉</strong>第一個「一」字的伴奏。</p>
+        <button class="btn-play" onclick="playChord([261.63, 329.63, 392.00])">🔊 試聽 C Major</button>
+      </div>
+      <div class="box">
+        <h3 style="color:#38bdf8">小三和弦 Minor</h3>
+        <p><strong>結構：</strong>小三度 + 大三度</p>
+        <p><strong>Am 和弦：</strong><code>A - C - E</code></p>
+        <p style="margin-top:8px;">憂鬱、感性、深沉。如<strong>〈給愛麗絲〉</strong>開頭的哀傷氛圍。</p>
+        <button class="btn-play" onclick="playChord([220.00, 261.63, 329.63])">🔊 試聽 A Minor</button>
+      </div>
+      <div class="box">
+        <h3 style="color:#f87171">減三和弦 Dim</h3>
+        <p><strong>結構：</strong>小三度 + 小三度</p>
+        <p><strong>Bdim：</strong><code>B - D - F</code></p>
+        <p style="margin-top:8px;">音程收縮、緊張不安。如<strong>默片反派登場</strong>的危機音效。</p>
+        <button class="btn-play" onclick="playChord([246.94, 293.66, 349.23])">🔊 試聽 B Dim</button>
+      </div>
+      <div class="box">
+        <h3 style="color:#c084fc">增三和弦 Aug</h3>
+        <p><strong>結構：</strong>大三度 + 大三度</p>
+        <p><strong>Caug：</strong><code>C - E - G#</code></p>
+        <p style="margin-top:8px;">音程擴張、懸疑漂浮，常用於夢幻轉場與驚奇感。</p>
+        <button class="btn-play" onclick="playChord([261.63, 329.63, 415.30])">🔊 試聽 C Aug</button>
+      </div>
+    </div>
+    <div class="wiki-ref">來源節點：[[02_三和弦的構造與色彩.md]]</div>
+  </section>
+
+  <!-- Slide 4: 大調順階和弦系統 -->
+  <section class="slide">
+    <h2>3. 大調順階和弦系統：同一調性的七口之家</h2>
+    <p class="subtitle">規定「只能使用 C 大調白鍵」向上堆疊三度，自然長出 7 個和諧和弦</p>
+    <table>
+      <thead>
+        <tr>
+          <th>級數（羅馬數字）</th>
+          <th>I</th>
+          <th>ii</th>
+          <th>iii</th>
+          <th>IV</th>
+          <th>V</th>
+          <th>vi</th>
+          <th>vii°</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>C 大調和弦名稱</strong></td>
+          <td><strong>C</strong></td>
+          <td><strong>Dm</strong></td>
+          <td><strong>Em</strong></td>
+          <td><strong>F</strong></td>
+          <td><strong>G</strong></td>
+          <td><strong>Am</strong></td>
+          <td><strong>Bdim</strong></td>
+        </tr>
+        <tr>
+          <td><strong>組成音（全白鍵）</strong></td>
+          <td>C-E-G</td>
+          <td>D-F-A</td>
+          <td>E-G-B</td>
+          <td>F-A-C</td>
+          <td>G-B-D</td>
+          <td>A-C-E</td>
+          <td>B-D-F</td>
+        </tr>
+        <tr>
+          <td><strong>和弦性質</strong></td>
+          <td>大三</td>
+          <td>小三</td>
+          <td>小三</td>
+          <td>大三</td>
+          <td>大三</td>
+          <td>小三</td>
+          <td>減三</td>
+        </tr>
+        <tr>
+          <td><strong>功能家族</strong></td>
+          <td><span class="pill t-color">主功能 T</span></td>
+          <td><span class="pill s-color">下屬 S</span></td>
+          <td><span class="pill t-color">主功能 T</span></td>
+          <td><span class="pill s-color">下屬 S</span></td>
+          <td><span class="pill d-color">屬功能 D</span></td>
+          <td><span class="pill t-color">主功能 T</span></td>
+          <td><span class="pill d-color">屬功能 D</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="example-tag">
+      🎵 <strong>實例解析：</strong>披頭四（The Beatles）經典名曲<strong>〈Let It Be〉</strong>主歌，僅使用 <code>I (C) - V (G) - vi (Am) - IV (F)</code> 四個順階和弦，因為全都是「白鍵家族成員」，聽起來無比自然和諧。
+    </div>
+    <div class="wiki-ref">來源節點：[[03_大調順階和弦系統.md]]</div>
+  </section>
+
+  <!-- Slide 5: 功能和聲三大支柱 -->
+  <section class="slide">
+    <h2>4. 功能和聲三大支柱：音樂的起承轉合</h2>
+    <p class="subtitle">和弦不是隨機排列，而是依照「穩定度與引力」推動劇情</p>
+    <div class="flow-diagram">
+      <div class="flow-node t-color" style="border: 2px solid #10b981;">T 主功能 (I)<br><small>安穩在家（起點）</small></div>
+      <div class="arrow">➔</div>
+      <div class="flow-node s-color" style="border: 2px solid #f59e0b;">S 下屬功能 (IV / ii)<br><small>離家探索（發展）</small></div>
+      <div class="arrow">➔</div>
+      <div class="flow-node d-color" style="border: 2px solid #ef4444;">D 屬功能 (V / vii°)<br><small>高度緊張（高潮）</small></div>
+      <div class="arrow">➔</div>
+      <div class="flow-node t-color" style="border: 2px solid #10b981;">T 主功能 (I)<br><small>解決回家（終點）</small></div>
+    </div>
+    <div class="grid-3">
+      <div class="box">
+        <h3 style="color:#34d399">🏠 主功能 Tonic (T)</h3>
+        <p>代表：<strong>I (C)</strong>、代理：vi (Am), iii (Em)。完全放鬆、零壓力，是音樂的歸宿。</p>
+      </div>
+      <div class="box">
+        <h3 style="color:#fbbf24">🎒 下屬功能 Subdominant (S)</h3>
+        <p>代表：<strong>IV (F)</strong>、代理：ii (Dm)。帶來溫暖開闊的視野變化，推動音樂向前走。</p>
+      </div>
+      <div class="box">
+        <h3 style="color:#f87171">⚡ 屬功能 Dominant (D)</h3>
+        <p>代表：<strong>V (G)</strong>、代理：vii° (Bdim)。內含導音 <code>B</code> 緊鄰主音 <code>C</code>，產生強烈想回家的引力。</p>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top: 14px;">
+      <button class="btn-play" onclick="playProgression([[261.63,329.63,392.00],[349.23,440.00,523.25],[392.00,493.88,587.33],[261.63,329.63,392.00]])">🔊 試聽黃金進行：C (T) → F (S) → G (D) → C (T)</button>
+    </div>
+    <div class="wiki-ref">來源節點：[[04_功能和聲三大支柱.md]]</div>
+  </section>
+
+  <!-- Slide 6: 實際曲目拆解〈小星星〉 -->
+  <section class="slide">
+    <h2>5. 實戰拆解：〈小星星〉的和聲旅程</h2>
+    <p class="subtitle">用最熟悉的兒歌，親眼看見 T → S → D → T 如何運作</p>
+    <div class="box" style="margin-top: 16px;">
+      <table>
+        <thead>
+          <tr>
+            <th>歌詞段落</th>
+            <th>一閃一閃亮晶晶</th>
+            <th>滿天都是</th>
+            <th>小星星</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>配置和弦</strong></td>
+            <td><strong>C (I 級)</strong></td>
+            <td><strong>F (IV 級) → C (I 級)</strong></td>
+            <td><strong>G (V 級) → C (I 級)</strong></td>
+          </tr>
+          <tr>
+            <td><strong>功能階段</strong></td>
+            <td><span class="pill t-color">T 主功能</span></td>
+            <td><span class="pill s-color">S 下屬功能</span> ➔ <span class="pill t-color">T</span></td>
+            <td><span class="pill d-color">D 屬功能</span> ➔ <span class="pill t-color">T</span></td>
+          </tr>
+          <tr>
+            <td><strong>聽覺心理感受</strong></td>
+            <td>在家裡平穩開場，確立調性中心</td>
+            <td>抬頭望向夜空，情緒溫暖展開</td>
+            <td>製造懸疑轉折後，穩穩落回句點</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="example-tag" style="margin-top: 20px;">
+        💡 <strong>核心洞察：</strong>如果把最後兩個和弦反過來（變成 <code>C → G</code> 停在 G 上），你會覺得這首歌「還沒唱完、卡在半空中」——這就是屬和弦（D）必須解決到主和弦（T）的心理引力！
+      </div>
+    </div>
+    <div class="wiki-ref">來源節點：[[04_功能和聲三大支柱.md]]</div>
+  </section>
+
+  <!-- Slide 7: 終止式：音樂的標點符號 -->
+  <section class="slide">
+    <h2>6. 終止式（Cadences）：音樂裡的標點符號</h2>
+    <p class="subtitle">樂句結尾的和弦連接方式，決定聽眾感受到的是「句號」還是「逗號」</p>
+    <div class="grid-2">
+      <div class="box">
+        <h3>。正格終止（V → I）</h3>
+        <p><strong>句號：</strong>從極度緊張的 G 回到穩定的 C，結束感最強烈、最果斷。</p>
+        <button class="btn-play" onclick="playProgression([[392.00,493.88,587.33],[261.63,329.63,392.00]])">🔊 試聽 G → C</button>
+      </div>
+      <div class="box">
+        <h3>，半終止（任何和弦 → V）</h3>
+        <p><strong>逗號 / 問號：</strong>停在緊張的 G 和弦上，製造未完待續的懸念，常出現在樂段前半句結尾。</p>
+        <button class="btn-play" style="background:#f59e0b" onclick="playProgression([[261.63,329.63,392.00],[392.00,493.88,587.33]])">🔊 試聽 C → G</button>
+      </div>
+      <div class="box">
+        <h3>🕊️ 變格終止（IV → I）</h3>
+        <p><strong>阿們終止：</strong>F → C，柔和聖潔地回到主音。源自教會聖詩結尾唱出「A-men」的和弦。</p>
+        <button class="btn-play" style="background:#34d399" onclick="playProgression([[349.23,440.00,523.25],[261.63,329.63,392.00]])">🔊 試聽 F → C</button>
+      </div>
+      <div class="box">
+        <h3>❗ 阻礙終止（V → vi）</h3>
+        <p><strong>劇情反轉：</strong>G 不回 C，反而轉向小調色彩的 Am！流行歌副歌常用這招「騙過耳朵、延長感動」。</p>
+        <button class="btn-play" style="background:#c084fc" onclick="playProgression([[392.00,493.88,587.33],[220.00,261.63,329.63]])">🔊 試聽 G → Am</button>
+      </div>
+    </div>
+    <div class="wiki-ref">來源節點：[[05_常見終止式與經典和弦進行.md]]</div>
+  </section>
+
+  <!-- Slide 8: 流行萬用進行解析 -->
+  <section class="slide">
+    <h2>7. 經典應用：橫跨古今的「流行萬用進行」</h2>
+    <p class="subtitle">I - V - vi - IV（C - G - Am - F）為何能寫出無數金曲？</p>
+    <div class="box">
+      <div class="flow-diagram">
+        <div class="flow-node t-color">I (C)<br><small>主功能：穩定開場</small></div>
+        <div class="arrow">➔</div>
+        <div class="flow-node d-color">V (G)<br><small>屬功能：推高張力</small></div>
+        <div class="arrow">➔</div>
+        <div class="flow-node t-color" style="border: 2px dashed #38bdf8;">vi (Am)<br><small>阻礙終止：感性轉折</small></div>
+        <div class="arrow">➔</div>
+        <div class="flow-node s-color">IV (F)<br><small>下屬功能：蓄積能量</small></div>
+      </div>
+      <p style="margin-top: 14px; line-height: 1.7;">
+        這組進行巧妙結合了<strong>「阻礙終止（V → vi）」</strong>的戲劇反轉，以及<strong>「變格進行（IV → I）」</strong>的循環動力，讓情緒像波浪一樣不斷推進而不會冷場。
+      </p>
+      <div class="example-tag">
+        🎵 <strong>跨時代經典實例：</strong>從巴洛克時期的<strong>《卡農》</strong>變奏，到現代華語金曲<strong>五月天〈突然好想你〉</strong>、<strong>周杰倫〈晴天〉</strong>，都流淌著這組和弦進行的基因！
+      </div>
+      <div style="text-align:center; margin-top: 14px;">
+        <button class="btn-play" onclick="playProgression([[261.63,329.63,392.00],[392.00,493.88,587.33],[220.00,261.63,329.63],[349.23,440.00,523.25]])">🔊 試聽經典進行：C → G → Am → F</button>
+      </div>
+    </div>
+    <div class="wiki-ref">來源節點：[[05_常見終止式與經典和弦進行.md]]</div>
+  </section>
+
+  <!-- Slide 9: 總結與知識圖譜回顧 -->
+  <section class="slide">
+    <h2>8. 總結：從零到一的和聲學地圖</h2>
+    <p class="subtitle">五個知識節點串起的完整邏輯鏈</p>
+    <div class="grid-2">
+      <div class="box">
+        <h3>🗺️ 學習路徑總回顧</h3>
+        <ul>
+          <li><strong>Step 1 音程音階：</strong>全全半全全全半，認識大/小三度。</li>
+          <li><strong>Step 2 三和弦：</strong>三度堆疊出明（Major）暗（Minor）緊（Dim）懸（Aug）。</li>
+          <li><strong>Step 3 順階和弦：</strong>C 大調白鍵家族 <code>I ii iii IV V vi vii°</code>。</li>
+          <li><strong>Step 4 功能和聲：</strong><code>T（家）→ S（出發）→ D（緊張）→ T（回家）</code>。</li>
+          <li><strong>Step 5 終止式：</strong>用 V→I（句號）、V→vi（反轉）說出動人故事。</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>🎯 給初學者的下一步練習</h3>
+        <p>打開任何一首你喜歡的流行歌和弦譜，試著找出它使用了哪些 <strong>C 大調順階和弦</strong>，並觀察副歌結尾是用了果斷的<strong>正格終止（G → C）</strong>，還是留有餘韻的<strong>阻礙終止（G → Am）</strong>！</p>
+        <div class="example-tag">
+          ✅ <strong>知識庫一致性驗證：</strong>本簡報所有概念與曲例均 100% 源自《基礎功能和聲學入門》LLM Wiki（共 5 篇核心文檔）。
+        </div>
+      </div>
+    </div>
+    <div class="wiki-ref">知識來源：LLM Wiki 全集（01 ~ 05）</div>
+  </section>
+</main>
+
+<footer>
+  <div style="font-size: 0.88rem; color: var(--muted);">提示：可使用鍵盤 <kbd>←</kbd> <kbd>→</kbd> 方向鍵或空白鍵切換投影片</div>
+  <div class="nav-btns">
+    <button onclick="changeSlide(-1)">⬅ 上一頁</button>
+    <button onclick="changeSlide(1)">下一頁 ➡</button>
+  </div>
+</footer>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('slideCounter');
+  const progressBar = document.getElementById('progressBar');
+
+  function updateUI() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+    counter.textContent = `${currentSlide + 1} / ${slides.length}`;
+    progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+  }
+
+  function changeSlide(dir) {
+    currentSlide = Math.max(0, Math.min(slides.length - 1, currentSlide + dir));
+    updateUI();
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+    if (e.key === 'ArrowLeft') changeSlide(-1);
+  });
+
+  // Web Audio API 簡易鋼琴合成器
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  let audioCtx;
+
+  function playTone(freq, startTime, duration = 0.9) {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, startTime);
+    gain.gain.setValueAtTime(0.001, startTime);
+    gain.gain.exponentialRampToValueAtTime(0.18, startTime + 0.04);
+    gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(startTime);
+    osc.stop(startTime + duration);
+  }
+
+  function playInterval(freqs) {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+    playTone(freqs[0], now, 0.6);
+    playTone(freqs[1], now + 0.45, 0.7);
+  }
+
+  function playChord(freqs) {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+    freqs.forEach(f => playTone(f, now, 1.1));
+  }
+
+  function playProgression(chords) {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    const now = audioCtx.currentTime;
+    chords.forEach((chord, idx) => {
+      chord.forEach(f => playTone(f, now + idx * 0.75, 0.7));
+    });
+  }
+
+  updateUI();
+</script>
+</body>
+</html>
